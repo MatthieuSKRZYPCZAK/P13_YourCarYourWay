@@ -25,16 +25,18 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.spring.boot.starter.data.jpa)
     implementation(libs.spring.boot.starter.security)
     implementation(libs.spring.boot.starter.web)
     implementation(libs.spring.boot.starter.websocket)
     implementation(libs.spring.boot.starter.validation)
+    implementation(libs.jjwt.api)
+    implementation(libs.jjwt.impl)
+    implementation(libs.jjwt.jackson)
+    implementation(libs.spring.boot.starter.oauth2.resource.server)
+    implementation(libs.spring.security.messaging)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
-
-    runtimeOnly(libs.postgresql)
 
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.security.test)

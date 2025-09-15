@@ -2,6 +2,7 @@
 spring-boot = "3.5.5"
 spring-dep-mgmt = "1.1.7"
 java = "24"
+jwt = "0.12.5"
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
@@ -10,16 +11,18 @@ spring-dependency-management = { id = "io.spring.dependency-management", version
 [libraries]
 # Starters Spring (versions portées par le BOM Spring Boot)
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
-spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
 spring-boot-starter-websocket = { module = "org.springframework.boot:spring-boot-starter-websocket" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
-
+spring-security-messaging = { module = "org.springframework.security:spring-security-messaging"}
+spring-boot-starter-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
 # Tests supplémentaires
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
 # Autres libs (versions aussi gérées par le BOM Spring Boot)
 lombok = { module = "org.projectlombok:lombok" }
-postgresql = { module = "org.postgresql:postgresql" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jwt" }
