@@ -1,0 +1,159 @@
+/* Bulle flottante fermée */
+.chat-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: #111827; /* gris très foncé */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  cursor: pointer;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.chat-toggle:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.toggle-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.toggle-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Panneau ouvert */
+.chat-floating {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: min(360px, 92vw);
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  overflow: hidden;
+  z-index: 1000;
+
+  /* petite anim */
+  transform: translateY(8px) scale(0.98);
+  opacity: 0;
+  animation: pop-in 180ms ease-out forwards;
+}
+
+@keyframes pop-in {
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* En-tête fond gris clair */
+.chat-header {
+  background: #f3f4f6;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.support-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.close {
+  border: none; background: transparent; font-size: 20px; line-height: 1;
+  cursor: pointer; padding: 4px 6px; border-radius: 6px;
+}
+
+.close:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.welcome {
+  margin: 10px 12px 0;
+  color: #111827;
+}
+
+.messages {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message {
+  background: #f9fafb;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.no-messages {
+  color: #6b7280;
+}
+
+.chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 10px 12px 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.chat-form input {
+  border: 1px solid #d1d5db; border-radius: 8px; padding: 10px;
+}
+
+.chat-form button {
+  border: none; border-radius: 8px; padding: 0 14px; background: #2563eb; color: #fff;
+}
+
+.chat-form button[disabled] {
+  opacity: 0.6;
+}
+
+.status {
+  padding: 6px 12px 10px;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+@media (max-width: 420px) {
+  .chat-floating {
+    right: 8px; bottom: 8px; width: calc(100vw - 16px); height: 70vh;
+  }
+}

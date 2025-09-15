@@ -1,0 +1,71 @@
+@if (me().role !== 'EMPLOYEE'){
+
+@if (!open()) {
+  <button
+    class="chat-toggle"
+    type="button"
+    aria-label="Ouvrir le chat support"
+    (click)="toggle()"
+  >
+    <img
+      class="toggle-avatar"
+      ngSrc="assets/images/chat-avatar.png"
+      width="40"
+      height="40"
+      alt="Support"
+    />
+    @if (unread() > 0) {
+      <span class="toggle-badge">{{ unread() }}</span>
+    }
+  </button>
+}
+
+@if (open()) {
+  <section class="chat-floating">
+    <header class="chat-header">
+      <div class="support-title">
+        <img
+          class="avatar"
+          ngSrc="assets/images/chat-avatar.png"
+          width="32"
+          height="32"
+          alt="Avatar du support"
+        />
+        <span>Support</span>
+        <span
+          class="status-dot"
+          [ngClass]="connected() ? 'online' : 'offline'"
+          [title]="connected() ? 'Le service est actuellement en ligne.' : 'Le service est actuellement hors ligne.'"
+        ></span>
+      </div>
+      <button class="close" type="button" (click)="toggle()">×</button>
+    </header>
+
+    @if (me().role === 'CLIENT' || me().role === 'GUEST') {
+      <p class="welcome">👋 Bonjour ! Comment pouvons-nous vous aider ?</p>
+    }
+
+    <div class="messages">
+
+      @for (message of messages(); track trackByIdx(i, message); let i = $index) {
+          <div class="message" [class.mine]="isMine(message)">
+            <strong>{{ displayName(message) }}:</strong> {{ message.content }}
+          </div>
+      } @empty {
+        <p class="no-messages">Commencez à discuter !</p>
+      }
+    </div>
+
+    <form class="chat-form" (submit)="sendMessage()">
+      <input
+        name="messages"
+        placeholder="Tapez un message..."
+        [ngModel]="input()"
+        (ngModelChange)="input.set($event)"
+        required
+      />
+      <button type="submit" [disabled]="!connected() || !input()">Envoyer</button>
+    </form>
+  </section>
+}
+}
