@@ -25,7 +25,6 @@ public class SupportController {
 		var attrs = sha.getSessionAttributes();
 		String clientId = attrs != null ? (String) attrs.get("clientId") : null;
 		if (clientId == null) {
-			System.out.println("[WS] fromClient: PAS de clientId en session → ignore");
 			return;
 		}
 
@@ -42,8 +41,6 @@ public class SupportController {
 		}
 
 		var out = new AdminMsg(clientId, sender, role, Instant.now(), in.content(), in.type());
-
-		System.out.println("[WS] fromClient: clientId=" + clientId + " sender=" + sender + " content=" + in.content());
 
 		messaging.convertAndSend("/topic/support.admin", out);
 		messaging.convertAndSend("/queue/support/" + clientId, out);

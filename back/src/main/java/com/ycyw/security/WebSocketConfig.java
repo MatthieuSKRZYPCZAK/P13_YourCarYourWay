@@ -64,9 +64,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 					var cid = first(acc, "X-Client-Id");
 					if (cid != null && !cid.isBlank()) {
 						acc.getSessionAttributes().put("clientId", cid);
-						System.out.println("[WS] CONNECT clientId=" + cid);
-					} else {
-						System.out.println("[WS] CONNECT sans X-Client-Id");
+
 					}
 				}
 				return message;
