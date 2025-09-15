@@ -1,0 +1,147 @@
+.support-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: calc(80vh - 32px);
+  gap: 12px;
+  padding: 12px;
+}
+
+.left {
+  border-right: 1px solid #eee;
+  padding-right: 8px;
+}
+
+.left ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.left li {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left li.active {
+  background: #f0f6ff;
+}
+
+.badge {
+  background: #0a66ff;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0 6px;
+  font-size: 12px;
+}
+
+.center {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 10px;
+
+  min-height: 0;
+}
+
+.thread {
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+
+  max-height: 100%;
+  min-height: 0;
+}
+
+.msg {
+  padding: 6px 10px;
+  margin: 8px 0;
+  background: #f6f6f6;
+  border-radius: 10px;
+  max-width: 70%;
+}
+
+.msg.me {
+  margin-left: auto;
+  background: #e9f2ff;
+}
+
+.msg .meta {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.msg .meta .who {
+  font-weight: 600;
+  color: #333;
+}
+.msg .text {
+  white-space: pre-wrap;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #0a66ff;
+  color: white;
+}
+
+.left li {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.left li .right {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.left .x {
+  width: 24px;
+  height: 24px;
+  line-height: 22px;
+  text-align: center;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #d32f2f; /* rouge plus vif */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.left .x:hover {
+  background: #ffe5e5;
+  color: #b71c1c;
+}

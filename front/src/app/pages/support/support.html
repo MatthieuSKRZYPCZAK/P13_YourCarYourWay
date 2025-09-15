@@ -1,0 +1,51 @@
+<div class="support-layout">
+  <aside class="left">
+    <h3>Conversations</h3>
+    <ul>
+      @for (c of convsList(); track c.key) {
+        <li (click)="select(c.key)" [class.active]="selectedId() === c.key">
+          <span class="name">{{ c.display }}</span>
+
+          <div class="right">
+            @if (c.unread > 0) { <span class="badge">{{ c.unread }}</span> }
+            <button
+              type="button"
+              class="x"
+              aria-label="Supprimer la conversation"
+              (click)="$event.stopPropagation(); deleteConversation(c.key)"
+              title="Supprimer"
+            >×</button>
+          </div>
+        </li>
+      } @empty {
+        <li class="empty">Aucune conversation</li>
+      }
+    </ul>
+  </aside>
+
+  <main class="center">
+    @if (selectedConv()) {
+      <div class="thread" #threadRef>
+        @for (m of messagesOfSelected(); track $index) {
+          <div class="msg" [class.me]="m.from === 'support'">
+            <div class="meta">
+              <span class="who">
+                {{ m.from === 'support' ? (m.sender || 'support') : (selectedConv()?.display) }}
+              </span>
+              <span class="when">{{ m.at | date:'short' }}</span>
+            </div>
+            <div class="text">{{ m.content }}</div>
+          </div>
+        }
+      </div>
+
+
+      <form (submit)="reply(input.value); input.value=''; $event.preventDefault()">
+        <input #input placeholder="Répondre..." (keydown.enter)="reply(input.value); input.value=''; $event.preventDefault()" />
+        <button type="submit">Envoyer</button>
+      </form>
+    } @else {
+      <div class="placeholder">Sélectionner une conversation</div>
+    }
+  </main>
+</div>
