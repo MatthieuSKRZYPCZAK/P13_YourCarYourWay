@@ -1,0 +1,42 @@
+<div class="auth-wrap">
+  <mat-card class="auth-card" appearance="outlined">
+    <div class="card-header">
+      <h2>Connexion</h2>
+      <p class="subtitle">Accédez à votre espace en toute sécurité</p>
+    </div>
+
+    @if (error()) {
+      <div class="alert error" role="alert" aria-live="assertive">
+        {{ error() }}
+      </div>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Nom d'utilisateur</mat-label>
+        <mat-icon matPrefix>person</mat-icon>
+        <input id="username" matInput formControlName="username" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Mot de passe</mat-label>
+        <mat-icon matPrefix>lock</mat-icon>
+        <input id="password" matInput formControlName="password" type="password" required />
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="submit"
+        type="submit"
+        [disabled]="loading()"
+      >
+        <span>Se connecter</span>
+      </button>
+    </form>
+
+    <div class="card-footer">
+      <a class="link" routerLink="/">← Retour</a>
+    </div>
+  </mat-card>
+</div>
