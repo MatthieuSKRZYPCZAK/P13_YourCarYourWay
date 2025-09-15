@@ -1,0 +1,36 @@
+<nav class="nav">
+   <a routerLink="/" class="brand">
+    <img src="assets/images/logo.png" alt="Logo Your Car Your Way" class="logo" />
+    <span class="brand-text">Your Car Your Way</span>
+  </a>
+  <span class="spacer"></span>
+
+  <!-- Menu droite -->
+  @if (!me().authenticated) {
+    <a routerLink="/signin" class="signin-btn">S’identifier</a>
+  } @else {
+    @if (me().role === 'EMPLOYEE') {
+      <a routerLink="/support" class="item support-link">Centre de gestion</a>
+      <div class="ws-status" [class.online]="connected()" [class.offline]="!connected()" title="{{ connected() ? 'Serveur connecté' : 'Serveur déconnecté' }}">
+        <span class="dot"></span>
+        <span class="status-text">{{ connected() ? 'Connecté' : 'Déconnecté' }}</span>
+      </div>
+    }
+    <img
+      class="avatar"
+      ngSrc="assets/images/mini-logo.png"
+      width="50"
+      height="50"
+      alt="Avatar du support"
+    />
+
+    <span class="item">
+      Bonjour <strong>{{ me().username }}</strong> @if(me().role === 'EMPLOYEE') { (Support)}
+    </span>
+    <button class="item logout-btn" (click)="logout()">Se déconnecter</button>
+  }
+</nav>
+<main class="main">
+  <router-outlet></router-outlet>
+  <app-chat></app-chat>
+</main>
