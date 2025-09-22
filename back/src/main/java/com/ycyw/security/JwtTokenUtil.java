@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 
 
 @Service
@@ -39,7 +40,7 @@ public class JwtTokenUtil {
 	}
 
 	public String generateToken(UserDetails user) {
-		var roles = user.getAuthorities().stream()
+		List<String> roles = user.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.map(a -> a.startsWith("ROLE_") ? a.substring(5) : a)
 				.toList();

@@ -2,6 +2,7 @@ package com.ycyw.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -17,6 +18,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -54,50 +58,59 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		);
 	}
 
+	/**
+	 * Intercepteur STOMP qui récupère l’en-tête <code>X-Client-Id</code> lors du CONNECT
+	 * et l’enregistre dans les attributs de session STOMP sous la clé <code>clientId</code>.
+	 * <p>
+	 * Router les messages vers une file dédiée au client (<code>/queue/support/{clientId}</code>).
+	 * </p>
+	 */
 	@Bean
 	public ChannelInterceptor clientIdInterceptor() {
 		return new ChannelInterceptor() {
 			@Override
-			public Message<?> preSend(Message<?> message, MessageChannel channel) {
-				var acc = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+			public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
+				StompHeaderAccessor acc = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 				if (acc != null && StompCommand.CONNECT.equals(acc.getCommand())) {
-					var cid = first(acc, "X-Client-Id");
+					String cid = first(acc);
 					if (cid != null && !cid.isBlank()) {
-						acc.getSessionAttributes().put("clientId", cid);
-
+						Objects.requireNonNull(acc.getSessionAttributes()).put("clientId", cid);
 					}
 				}
 				return message;
 			}
-			private String first(StompHeaderAccessor acc, String name) {
-				var list = acc.getNativeHeader(name);
-				return (list != null && !list.isEmpty()) ? list.get(0) : null;
+			private String first(StompHeaderAccessor acc) {
+				List<String> list = acc.getNativeHeader("X-Client-Id");
+				return (list != null && !list.isEmpty()) ? list.getFirst() : null;
 			}
 		};
 	}
 
-
+	/**
+	 * Intercepteur STOMP qui lors du CONNECT, lit le header Authorization (Bearer JWT),
+	 * décode le token et attache l’Authentication Spring Security à la session STOMP.
+	 * <p>
+	 * Identifie l’utilisateur sur les messages entrants/sortants
+	 * </p>
+	 */
 	@Bean
 	public ChannelInterceptor stompAuthInterceptor() {
 		return new ChannelInterceptor() {
 			@Override
-			public Message<?> preSend(Message<?> message, MessageChannel channel) {
-				var accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+			public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
+				StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 				if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
 					try {
-						var authHeaders = accessor.getNativeHeader("Authorization");
+						List<String> authHeaders = accessor.getNativeHeader("Authorization");
 						if (authHeaders != null && !authHeaders.isEmpty()) {
-							String value = authHeaders.get(0);
+							String value = authHeaders.getFirst();
 							if (value != null && value.startsWith("Bearer ")) {
 								String raw = value.substring(7);
-								if (raw != null && !raw.isBlank() && !"null".equalsIgnoreCase(raw)) {
+								if (!raw.isBlank() && !"null".equalsIgnoreCase(raw)) {
 									Jwt jwt = jwtDecoder.decode(raw);
-									AbstractAuthenticationToken authentication =
-											(AbstractAuthenticationToken) jwtAuthenticationConverter.convert(jwt);
-									if (authentication != null) {
-										authentication.setAuthenticated(true);
-										accessor.setUser(authentication); // attache le Principal à la session STOMP
-									}
+									AbstractAuthenticationToken authentication = jwtAuthenticationConverter.convert(jwt);
+									authentication.setAuthenticated(true);
+									accessor.setUser(authentication); // attache le Principal à la session STOMP
 								}
 							}
 						}

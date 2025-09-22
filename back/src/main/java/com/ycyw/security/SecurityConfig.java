@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -31,7 +32,7 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/api/me","/api/login", "/api/refresh", "/api/ws-chat/**").permitAll()
+						.requestMatchers("/api/me","/api/login", "/api/refresh", "/api/ws-chat/**", "/error").permitAll()
 						.anyRequest().authenticated()
 				)
 
@@ -44,12 +45,12 @@ public class SecurityConfig {
 
 	@Bean
 	public JwtAuthenticationConverter jwtAuthenticationConverter() {
-		var gac = new org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter();
-		gac.setAuthoritiesClaimName("roles");
-		gac.setAuthorityPrefix("ROLE_");
+		JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+		authoritiesConverter.setAuthoritiesClaimName("roles");
+		authoritiesConverter.setAuthorityPrefix("ROLE_");
 
-		var converter = new JwtAuthenticationConverter();
-		converter.setJwtGrantedAuthoritiesConverter(gac);
+		JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+		converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
 		return converter;
 	}
 

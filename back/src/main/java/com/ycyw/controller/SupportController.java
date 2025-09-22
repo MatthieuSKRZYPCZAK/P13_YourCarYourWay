@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
 import java.time.Instant;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class SupportController {
 						   Principal principal,
 						   Authentication auth,
 						   SimpMessageHeaderAccessor sha) {
-		var attrs = sha.getSessionAttributes();
+		Map<String, Object> attrs = sha.getSessionAttributes();
 		String clientId = attrs != null ? (String) attrs.get("clientId") : null;
 		if (clientId == null) {
 			return;
@@ -40,16 +41,16 @@ public class SupportController {
 			}
 		}
 
-		var out = new AdminMsg(clientId, sender, role, Instant.now(), in.content(), in.type());
+		AdminMsg out = new AdminMsg(clientId, sender, role, Instant.now(), in.content(), in.type());
 
 		messaging.convertAndSend("/topic/support.admin", out);
 		messaging.convertAndSend("/queue/support/" + clientId, out);
 	}
 
-	@MessageMapping("support.reply")  // employee -> /app/support.reply
+	@MessageMapping("support.reply")
 	public void fromAdmin(AdminReply in, Principal principal) {
 
-		var out = new AdminMsg(
+		AdminMsg out = new AdminMsg(
 				in.getTargetClientId(),
 				principal != null ? principal.getName() : "support",
 				"ROLE_EMPLOYEE",
