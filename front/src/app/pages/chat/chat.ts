@@ -44,20 +44,8 @@ export class Chat implements OnInit, OnDestroy {
         this.unread.set(0);
         this.input.set('');
 
-
-        const isLoggedIn = !!u?.username;
         this.chat.resetConnection(true);
         this.lastKey = key;
-      }
-    });
-
-    effect(() => {
-      const msgs = this.messages();
-      if (this.threadRef) {
-        queueMicrotask(() => {
-          const el = this.threadRef.nativeElement;
-          el.scrollTop = el.scrollHeight;
-        });
       }
     });
   }
@@ -85,10 +73,7 @@ export class Chat implements OnInit, OnDestroy {
   }
 
   displayName(m: ChatMessage): string {
-
     if (this.isMine(m)) return 'moi';
-
-    console.log("SENDER?? => "  + m?.sender)
 
     const base = m?.sender ?? 'guest';
     const role = (m as any).role ?? (m as any).senderRole; // fallback

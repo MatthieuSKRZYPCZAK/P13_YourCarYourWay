@@ -41,7 +41,10 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('chatClientId');
+
     this.me.set({ authenticated: false, username: 'guest', role: 'GUEST' });
+    document.dispatchEvent(new CustomEvent('chat:logout'));
     void this.router.navigate(['']);
   }
 
@@ -71,22 +74,6 @@ export class AuthService {
   isGuest(): boolean {
     const u = this.me();
     return !u || !u.authenticated || u.role === 'GUEST';
-  }
-
-  isAuthenticated(): Observable<boolean> {
-    const token = this.getToken();
-    if(!token) {
-      return of(false);
-    }
-    if (this.me().authenticated) return of(true);
-
-    return this.getCurrentUser().pipe(
-      map(() => true),
-      catchError(() => {
-        this.logout();
-        return of(false);
-      })
-    )
   }
 
   getCurrentUser(): Observable<Me> {

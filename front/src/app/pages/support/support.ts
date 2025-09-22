@@ -1,7 +1,8 @@
 import {Component, inject, OnInit, signal, computed, ViewChild, ElementRef} from '@angular/core';
 import {CommonModule, DatePipe} from '@angular/common';
-import {ChatService, uuid} from '../../services/chat.service';
+import {ChatService} from '../../services/chat.service';
 import { AuthService } from '../../services/auth.service';
+import {uuid} from '../../utils/uuid.util';
 
 type MessageItem = {
   id: string;

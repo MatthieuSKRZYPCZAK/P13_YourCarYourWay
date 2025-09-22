@@ -4,13 +4,8 @@ import SockJS from 'sockjs-client';
 import { Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import {ChatMessage} from '../models/chat-message';
+import {uuid} from '../utils/uuid.util';
 
-export function uuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
@@ -26,6 +21,10 @@ export class ChatService {
 
   constructor(private auth: AuthService) {
     sessionStorage.setItem('chatClientId', this._clientId);
+
+    document.addEventListener('chat:logout', () => {
+      void this.resetAndReconnectAsGuest();
+    });
   }
 
   get clientId() { return this._clientId; }
@@ -135,7 +134,7 @@ export class ChatService {
     });
   }
 
-  resetConnection(reconnect: boolean) {
+  resetConnection(_reconnect: boolean) {
     this.sub?.unsubscribe();
     this.sub = null;
     const old = this.client;
@@ -150,6 +149,24 @@ export class ChatService {
     } else {
       this.connectSupport();
     }
+  }
+
+  private async resetAndReconnectAsGuest() {
+    try { this.sub?.unsubscribe(); } catch {}
+    this.sub = null;
+    if (this.client?.active) {
+      await this.client.deactivate(); // ferme proprement la connexion STOMP
+    }
+    this.client = null;
+    this.connected.set(false);
+    this.messages.set([]);
+
+    // recrée un nouvel ID pour la session invité
+    this._clientId = uuid();
+    sessionStorage.setItem('chatClientId', this._clientId);
+
+    // reconnecte immédiatement en mode client (invité)
+    this.connectClient();
   }
 }
 
