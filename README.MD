@@ -71,6 +71,18 @@ Prérequis : **Java 24**
 
 👉 L’application sera disponible sur : http://localhost:4200
 
+---
+### 🔑 Authentification (pour les tests)
+Deux utilisateurs de démonstration sont pré-configurés côté backend:
+
+| Utilisateur | Rôle     | Mot de passe |
+| ----------- | -------- | ------------ |
+| **bob**     | CLIENT   | `password`   |
+| **alice**   | EMPLOYEE | `password`   |
+
+> Vous pouvez utiliser ces identifiants pour tester les fonctionnalités de chat en tant que **client** ou **employé de support**.
+
+
 
 ---
 
@@ -121,6 +133,19 @@ Requirements : **Java 24**
 ```
 
 👉 Application available at : http://localhost:4200
+
+---
+
+### 🔑 Authentication (for testing)
+Two demo users are pre-configured in the backend:
+
+| User      | Role     | Password   |
+|-----------|----------|------------|
+| **bob**   | CLIENT   | `password` |
+| **alice** | EMPLOYEE | `password` |
+
+> Use these credentials to test the chat features as a **customer** or **support employee**.
+
 
 
 
